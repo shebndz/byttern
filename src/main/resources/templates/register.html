@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ByteTern Sign Up</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-image: url('https://i.ibb.co/pBq6Gwtv/BB2-Main-Campus-II.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      background-color: rgba(128, 0, 0, 0.85);
+      width: 40%;
+      padding: 40px;
+      border-radius: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 50px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .logo-container img {
+      height: 120px;
+    }
+
+    h2 {
+      text-align: center;
+      color: white;
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: white;
+      color: darkred;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      padding: 15px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #ddd;
+    }
+
+    .alert {
+      background: #fff3cd;
+      color: #856404;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo-container">
+    <img src="https://i.ibb.co/TDW6nq5d/image-removebg-preview.png" alt="BYTETERN Logo">
+    <img src="https://i.ibb.co/6crbNVrc/Bat-State-U-NEU-Logo-1.png" alt="BSU Logo">
+  </div>
+
+  <div class="overlay">
+    <h2>SIGN UP</h2>
+    <form th:action="@{/register/new}" th:object="${user}" method="post">
+      <div th:if="${error}" class="alert" role="alert">
+        <p th:text="${error}"></p>
+      </div>
+      <input type="email" placeholder="Email" th:field="*{email}" required />
+      <input type="password" placeholder="Password" th:field="*{password}" required />
+      <select th:field="*{userTypeId}" required>
+        <option value="" disabled selected>Select Role</option>
+        <th:block th:each="userType : ${getAllTypes}">
+          <option th:value="${userType.userTypeId}" th:text="${userType.userTypeName}"></option>
+        </th:block>
+      </select>
+      <button type="submit" class="btn">CREATE ACCOUNT</button>
+    </form>
+  </div>
+
+</body>
+</html>

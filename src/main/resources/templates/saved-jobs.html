@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet"/>
+
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-image: url('https://i.ibb.co/pBq6Gwtv/BB2-Main-Campus-II.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        header {
+            background-color: white;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left img {
+            height: 60px;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 10px;
+        }
+
+        .header-center img {
+            height: 60px;
+        }
+
+        .header-center span {
+            font-weight: bold;
+            color: #800000;
+            font-size: 20px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: darkred;
+            font-weight: bold;
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logout-btn {
+        background-color: darkred;
+        border: none;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        }
+        .primary-title {
+            font-weight: bold;
+            color: #800000;
+        }
+
+        .large-label {
+            font-weight: bold;
+            color: #800000;
+        }
+
+        .box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .job-row {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            transition: 0.2s ease-in-out;
+        }
+
+        .job-row:hover {
+            background-color: #f0f0f0;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .title-span {
+            font-size: 12px;
+            margin-left: 10px;
+            color: #888;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+
+        nav {
+      background-color: #800000;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px 0;
+      font-weight: bold;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    nav a.active {
+      color: gold;
+    }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-wrapper">
+
+        <div class="header-left">
+            <img src="https://i.ibb.co/6crbNVrc/Bat-State-U-NEU-Logo-1.png" alt="BatStateU">
+        </div>
+
+        <div class="header-center">
+            <img src="https://i.ibb.co/TDW6nq5d/image-removebg-preview.png" alt="ByteTern">
+        </div>
+
+        <div class="user-info" sec:authorize="isAuthenticated()">
+            <img class="profile-avatar"
+                th:if="${user.profilePhoto != null and user.profilePhoto != ''}"
+                th:src="@{'/photos/candidate/' + ${user.userAccountId} + '/' + ${user.profilePhoto}}"
+                alt="Profile"/>
+            <label class="nav-item nav-link px-2 me-3"
+                th:if="${user.firstName != null and user.lastName != null}"
+                th:text="${user.firstName + ' ' + user.lastName}">User</label>
+            <button class="logout-btn me-3" onclick="window.location.href='/logout'">Logout</button>
+        </div>
+
+    </div>
+</header>
+<nav>
+  <a sec:authorize="hasAuthority('Student')" class="active" th:href="@{/saved-jobs/}"><i class="fa-solid fa-eye"></i> Saved</a>
+  <a sec:authorize="hasAuthority('Student')"  th:href="@{/dashboard/}"><i class="fas fa-search"></i>Search for Jobs</a>
+  <a sec:authorize="hasAuthority('Student')"  th:href="@{/job-seeker-profile/}"><i class="fa-solid fa-pencil"></i> Edit Profile</a>
+
+</nav>
+
+<section class="container mt-4">
+    <div class="box">
+        <h1 class="primary-title">Saved Jobs</h1>
+    </div>
+
+    <div class="box">
+        <label class="large-label">Results</label>
+        <th:block th:each="jobPost : ${jobPost}">
+            <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}">
+                <div class="job-row">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="job-title">
+                                [[${jobPost.jobTitle}]]
+                                <span class="title-span" sec:authorize="hasAuthority('Recruiter')"
+                                      th:text="'('+ @{${jobPost.totalCandidates}}+' Candidates Applied)'">(xx candidates)</span>
+                                <span class="title-span" sec:authorize="hasAuthority('Student')"
+                                      th:if="${jobPost.isActive == true}">(Applied)</span>
+                            </label>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.province}">
+                                City, Province</label>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <label th:text="${jobPost.jobCompanyId.name}">Company</label>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </th:block>
+    </div>
+</section>
+
+<!-- SCRIPTS -->
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+<script>
+    $('#job').change(function () {
+        $('#hidJob').val($(this).val());
+    });
+    $('#loc').change(function () {
+        $('#hidLoc').val($(this).val());
+    });
+</script>
+
+</body>
+</html>

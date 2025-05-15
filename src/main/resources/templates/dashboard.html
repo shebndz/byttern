@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteTern Dashboard</title>
+  <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: Montserrat , sans-serif;
+      background-image: url('https://i.ibb.co/pBq6Gwtv/BB2-Main-Campus-II.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+    }
+
+    header {
+      background-color: white;
+      padding: 10px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-left, .logo-right {
+      height: 60px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: darkred;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background-color: darkred;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    nav {
+      background-color: #800000;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px 0;
+      font-weight: bold;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    nav a.active {
+      color: gold;
+    }
+
+    .main {
+      display: flex;
+      padding: 30px;
+      gap: 30px;
+    }
+
+    .sidebar {
+      background-color: #660000;
+      padding: 20px;
+      border-radius: 15px;
+      min-width: 250px;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .search-bar button {
+      background-color: gold;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .results {
+      background-color: #990000;
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .job-row {
+      padding: 20px;
+      border-bottom: 1px solid #fff;
+      color: white;
+    }
+
+    .job-row:hover {
+      background-color: rgba(255,255,255,0.1);
+      cursor: pointer;
+    }
+    .profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://i.ibb.co/6crbNVrc/Bat-State-U-NEU-Logo-1.png" class="logo-left">
+  <img src="https://i.ibb.co/TDW6nq5d/image-removebg-preview.png" class="logo-right">
+  <div class="user-info" sec:authorize="isAuthenticated()">
+    <!-- Candidate -->
+    <img class="profile-avatar"
+         sec:authorize="hasAuthority('Student')"
+         th:if="${user.profilePhoto != null and user.profilePhoto != ''}"
+         th:src="@{'/photos/candidate/' + ${user.userAccountId} + '/' + ${user.profilePhoto}}"
+         alt="Candidate Profile"/>
+
+    <!-- Faculty -->
+    <img class="profile-avatar"
+         sec:authorize="hasAuthority('Faculty')"
+         th:if="${user.profilePhoto != null and user.profilePhoto != ''}"
+         th:src="@{'/photos/faculty/' + ${user.userAccountId} + '/' + ${user.profilePhoto}}"
+         alt="Faculty Profile"/>
+
+    <!-- Recruiter -->
+    <img class="profile-avatar"
+         sec:authorize="hasAuthority('Recruiter')"
+         th:if="${user.profilePhoto != null and user.profilePhoto != ''}"
+         th:src="@{'/photos/recruiter/' + ${user.userAccountId} + '/' + ${user.profilePhoto}}"
+         alt="Recruiter Profile"/>
+
+    <label class="nav-item nav-link px-2 me-3"
+           th:if="${user.firstName != null and user.lastName != null}"
+           th:text="${user.firstName + ' ' + user.lastName}">User</label>
+    <button class="logout-btn me-3" onclick="window.location.href='/logout'">Logout</button>
+</div>
+
+</div>
+
+</header>
+
+
+<nav>
+  <a sec:authorize="hasAuthority('Student')" th:href="@{/saved-jobs/}"><i class="fa-solid fa-eye"></i> Saved</a>
+  <a sec:authorize="hasAuthority('Student')" class="active" th:href="@{/dashboard/}"><i class="fas fa-search"></i>Search for Jobs</a>
+  <a sec:authorize="hasAuthority('Student')" th:href="@{/job-seeker-profile/}"><i class="fa-solid fa-pencil"></i> Edit Profile</a>
+  <a sec:authorize="hasAuthority('Recruiter')"  th:href="@{/dashboard/add}"><i class="fa-solid fa-file-circle-plus"></i> Post Internships</a>
+  <a sec:authorize="hasAuthority('Recruiter')" class="active" th:href="@{/dashboard/}"><i class="fa-solid fa-eye"></i> View Internships</a>
+  <a sec:authorize="hasAuthority('Recruiter')" th:href="@{/recruiter-profile/}"><i class="fa-solid fa-pencil"></i> Edit Account</a>
+  <a sec:authorize="hasAuthority('Faculty')" th:href="@{/courses-faculty}"><i class="fa-solid fa-folder"></i> Course</a>
+  <a sec:authorize="hasAuthority('Faculty')" class= "active" th:href="@{/dashboard/}"><i class="fa-solid fa-book"></i> Internship Application</a>
+  <a sec:authorize="hasAuthority('Faculty')" th:href="@{/faculty-profile/}"><i class="fa-solid fa-pencil"></i> Edit Account</a>
+
+</nav>
+
+<div class="main">
+  <div class="sidebar" sec:authorize="hasAuthority('Student')">
+    <h3>FILTER RESULTS</h3>
+    <form id="myForm" th:action="@{/dashboard/}" method="get">
+      <div class="filter-group">
+        <label>Employment Type</label>
+        <label><input type="checkbox" name="paid" th:checked="${paid}"> Paid</label>
+        <label><input type="checkbox" name="unpaid" th:checked="${unpaid}"> Unpaid</label>
+      </div>
+      <div class="filter-group">
+        <label>Remote</label>
+        <label><input type="checkbox" name="remoteOnly" th:checked="${remoteOnly}"> Remote-Only</label>
+        <label><input type="checkbox" name="onSite" th:checked="${onSite}"> On-Site</label>
+        <label><input type="checkbox" name="hybrid" th:checked="${hybrid}"> Hybrid</label>
+      </div>
+      <div class="filter-group">
+        <label>Date Posted</label>
+        <label><input type="checkbox" name="today" th:checked="${today}"> Today</label>
+        <label><input type="checkbox" name="days7" th:checked="${days7}"> Last 7 Days</label>
+        <label><input type="checkbox" name="days30" th:checked="${days30}"> Last 30 Days</label>
+      </div>
+      <input type="hidden" id="hidJob" name="job" th:value="${job}">
+      <input type="hidden" id="hidLoc" name="location" th:value="${location}">
+    </form>
+  </div>
+
+  <div class="content" th:if="${jobPost != null}" th:action="@{/dashboard/}" method="get">
+    <div class="search-bar" sec:authorize="hasAuthority('Student')">
+      <input id="job" type="text" placeholder="Search for a job" name="job" th:value="${job}" />
+      <input id="loc" type="text" placeholder="Location" name="location" th:value="${location}" />
+      <button type="submit" form="myForm"><i class="fas fa-search"></i></button>
+    </div>
+
+    <div class="results">
+      <label class="h4" sec:authorize="hasAuthority('Student')">Search Results</label>
+      <th:block th:each="jobPost : ${jobPost}">
+        <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}" style="text-decoration: none;">
+          <div class="job-row">
+            <strong>[[${jobPost.jobTitle}]]</strong> <br />
+            <span th:text="${jobPost.jobLocationId.city + ', ' + jobPost.jobLocationId.province}"></span> | 
+            <span th:text="${jobPost.jobCompanyId.name}"></span>
+          </div>
+        </a>
+      </th:block>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+  $('#job').change(function () {
+    $('#hidJob').val($(this).val());
+  });
+  $('#loc').change(function () {
+    $('#hidLoc').val($(this).val());
+  });
+</script>
+
+</body>
+</html>

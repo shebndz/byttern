@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteTern - Batangas State University</title>
+      <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}"/>
+    <meta charset="ISO-8859-1">
+
+</head>
+<body>
+  <div class="left">
+    <div class="left-content">
+      <img src="https://i.ibb.co/6crbNVrc/Bat-State-U-NEU-Logo-1.png" alt="BSU Logo" />
+      <h2>Login to your account</h2>
+      <div class="btn-group">
+    <a th:href="@{/login}">Recruiter</a>
+    <a th:href="@{/login}">Faculty</a>
+    <a th:href="@{/login}">Student</a>
+</div>
+<div class="signin-text">
+    Don’t have an account yet?
+    <br />
+    <a th:href="@{/register}">Sign up</a>
+</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="bytetern-header">
+      <img src="https://i.ibb.co/TDW6nq5d/image-removebg-preview.png" alt="ByteTern Logo" />
+    </div>
+    <div class="right-content">
+      <h1>Begin Your Internship Journey with ByteTern!</h1>
+      <p>
+        Your journey from intern to professional starts here.<br />
+        Seamlessly manage internship experience at Batangas State University
+        with smart tools designed for your growth.
+      </p>
+      <h3>Intern Today, Professional Tomorrow.</h3>
+    </div>
+  </div>
+</body>
+</html>
